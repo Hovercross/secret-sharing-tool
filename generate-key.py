@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import json
 from uuid import uuid4
 import os
@@ -9,6 +10,18 @@ from Crypto.PublicKey import RSA
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--id")
+    args = parser.parse_args()
+
+    def get_id() -> str:
+        if args.id:
+            return args.id
+
+        return uuid4().hex
+
+    key_id = get_id()
+
     public_dir = Path("public_keys")
     private_dir = Path("private_keys")
 
@@ -17,8 +30,6 @@ def main():
 
     if not private_dir.exists():
         os.mkdir(private_dir)
-
-    key_id = uuid4().hex
 
     private_key = RSA.generate(4096)
     private_key_lines = private_key.export_key("PEM").decode("ascii").splitlines()

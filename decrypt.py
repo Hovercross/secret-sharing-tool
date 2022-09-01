@@ -4,9 +4,7 @@ import argparse
 from pathlib import Path
 from base64 import b64decode, b64encode
 import json
-from typing import Any, Dict, List, Tuple
 
-from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Protocol.SecretSharing import Shamir
@@ -56,6 +54,11 @@ def main():
             key_part = key_cipher.decrypt(encrypted_key_part)
 
             available_keys.append((index, key_part))
+
+    required_count: int = encoded_data["required"]
+    if len(available_keys) < required_count:
+        print(f"At least {required_count} keys must be available")
+        raise SystemExit(1)
 
     # Get back the AES key that was used to encrypt this file
     key = Shamir.combine(available_keys)

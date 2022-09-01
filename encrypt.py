@@ -81,6 +81,7 @@ def main():
         "data": encoded_encrypted_data.splitlines(),
         "shares": sorted(public_keys, key=lambda k: k["index"]),
         "originalName": str(original_file),
+        "required": required_count,
     }
 
     output_name = f"{base_name}.secret.json"
